@@ -1,104 +1,137 @@
+/*
+
+  * Trabalho de Introdução a C/C++
+  * Programa: Jogo de Anagrama
+  * Autores: Julia Deroci & Daniel Ferreira
+  * Data: 27/02/2021
+
+*/
+
+//Bibliotecas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <locale.h>
 #include <ctype.h>
+#include <time.h>
 
-#define TAM_LISTA 50
+
+#define TAM_LISTA 57
 
 
 int main(){
 
 
-  /*Contadores*/
-  int i = 0, j = 0, c = 0, x = 0, score = 0;  
-  
-  /*Arquivo*/
-  FILE *lista;  
-  
-  /*Palavras da lista*/
-  char palavra[TAM_LISTA], palavraslista[TAM_LISTA], anagrama[TAM_LISTA], 
-  r[TAM_LISTA], resposta[TAM_LISTA], * comparar;
-  
-  /*Inteiros*/
-  int sorteio = 0, decisao, tam_resposta, tam_anagrama;
- 
+  //Inteiros
+  int i = 0, j = 0, c = 0, x = 0, npalavras = 0, score = 0, sorteio = 0, decisao, tam_resposta, tam_anagrama;
 
-  printf("////////// Seja bem-vindo(a) ao ANAGRAMA! //////////\n\n");
+  //Arquivo
+  FILE *lista;
+
+  //Strings
+  char palavra[TAM_LISTA], palavraslista[TAM_LISTA], anagrama[TAM_LISTA],
+  r[TAM_LISTA], resposta[TAM_LISTA], * comparar;
+
+  //Comando de Regionalização
+  setlocale(LC_ALL, "");
+
+  //Zerar String
+  memset(anagrama, 0, sizeof(anagrama));
+
+
   
-   printf("\nCreated by: Julia Deroci & Daniel Ferreira.\n\n");
-  
+  menu:
+  printf(" //////////////////////////// Seja Bem-Vindo(a)! /////////////////////////////\n\n\n");
+
+  printf("    ______________________________________________________________________ \n");
+  printf(" ________  __   __  ________  ________  _______  ________  ___  ___  ________ \n");
+  printf("|   __   ||  | |  ||   __   ||   _____||  __   ||   __   ||   |/   ||   __   |\n");
+  printf("|  |__|  ||    |  ||  |__|  ||  | ____ | |_ /  ||  |__|  ||        ||  |__|  |\n");
+  printf("|   __   ||  |    ||   __   ||  |__|  ||      / |   __   ||  | /|  ||   __   |\n");
+  printf("|__|  |__||__| |__||__| |___||________||__||__| |__|  |__||__|  |__||__|  |__|\n");
+  printf("    ______________________________________________________________________  \n");
+
+   printf("\n\nCreated by: Julia Deroci & Daniel Ferreira.\n\n");
+
   do{
-    
-    printf("\n1.Iniciar\n2.Como jogar?\n3.Sair\n\n");
+
+
+    printf("\n\n\n\t1.Iniciar\n\t2.Como jogar?\n\t3.Sair\n\n\n");
+    printf("\t");
     scanf("%d", &decisao);
-  
+
+    system("cls");
     switch(decisao){
-        
+
       case 1:
-        printf("\nPronto?! Vamos lá!\n\n");
+        printf("\nPronto?!...");
+        Sleep(2000);
+        printf("Vamos lá!\n\t\n\t\n\t\n");
         break;
       case 2:
-        printf("\nO objetivo desse jogo e formar um anagrama com as letras que serao apresentadas na tela.\nDigite RANDOM para gerar uma nova palavra e FIM para sair do jogo!\nCARACTERES ESPECIAIS NÃO SERÃO CONSIDERADOS.\n\nDivirta-se!\n");
+        printf("    _____________________________________________________________________\n");
+        printf("\n\n\tO objetivo desse jogo é formar anagramas com as letras \n\tque serão apresentadas na tela.\n");
+        printf("\n\n\tDigite:\n\n\t- 'RANDOM' para gerar novas letras.\n\t- '0' para voltar ao menu.\n\t- 'FIM' para sair do jogo.\n");
+        printf("\n\tCARACTERES ESPECIAIS NÃO SERÃO CONSIDERADOS.\n");
+        printf("\n\n\tDivirta-se!\n");
+        printf("\n    _____________________________________________________________________");
 
-        printf("\n1.Voltar\n2.Sair\n\n");
+        printf("\n\n\n\t1.Voltar\n\n");
+        printf("\t");
         scanf("%d", &decisao);
+        system("cls");
+
         if(decisao == 1){
-          continue;
-        }
-        else if(decisao == 2){
-          return 0;
+          goto menu;
         }
         else{
-          printf("\nEscolha entre umas das opções!\n\n");
+          printf("\n\n\n\tEscolha entre umas das opções!\n\n");
           continue;
-        }   
+        }
       case 3:
-        printf("\nTchau, amigo! Até a próxima!\n\n");
+        printf("\n\n\n\n\n\n\n\n\n\t\t\tTchau, amigo(a)! Até a próxima!\n\n\n\n\n\n\n\n\n\n\n");
         return 0;
       default:
-        printf("\nEscolha entre umas das opções!\n\n"); 
+        printf("\n\n\n\tEscolha entre umas das opções!\n\n");
         continue;
       }
     break;
   } while(1);
-  
-  
-  /*Abrindo o arquivo e lendo as palavras*/
-    
-    lista = fopen("palavras.txt", "r");
-    if(lista == NULL){
-      printf("O arquivo não pode ser aberto.\n");
-      exit(1);
-    }  
 
+//Abrindo o Arquivo e Lendo as Palavras
+  lista = fopen("palavras.txt", "r");
+  if(lista == NULL){
+    printf("\n\n\n\n\tO arquivo não pode ser aberto.\n\n\n\n\n");
+    exit(1);
+  }
 
-  while(1){  
-    
-    /*Sorteando palavras da lista*/
-    
-    while(fscanf(lista, "%s", palavra) != EOF){
-      rewind(lista);
-      srand(time(NULL));
-      sorteio = rand() % TAM_LISTA;
+  while(fscanf( lista, "%s", palavra) != EOF ){
+    npalavras ++;
+  }
 
-      for(i = 0, j = 0; j < sorteio; i++){
-        if(fgetc(lista) == '\n'){
-          j++;
-        }
-      }
-      break;
+  printf("As letras são: ");
+
+  while(1){
+
+  //Sorteando Palavras da Lista
+    rewind(lista);
+    srand(time(NULL));
+    sorteio = rand() % (npalavras + 1);
+
+    for(i = 0; i < sorteio; i++){
+      fscanf(lista, "%s", palavra);
     }
 
+  //Zerando a String
+    memset(anagrama, 0, sizeof(anagrama));
 
-    /*Embaralhando a palavra*/
-
+    start:
+  //Embaralhando a Palavra
     for(i = 0; i < strlen(palavra); i++){
 
       x = rand() % strlen(palavra);
       c = 0;
-      if (i == 0) {
+      if (i == 0){
         anagrama[i] = palavra[x];
         r[i] = x;
       }
@@ -116,52 +149,49 @@ int main(){
             anagrama[i] = palavra[x];
             r[i] = x;
           }
-        }  
+        }
       }
-      //Consertando o erro (VER DEPOIS)
-      if(isalpha(anagrama[i]) != 0 || strlen(anagrama) != strlen(palavra)){ 
-        continue;
-      }
-    }  
+    }
     printf("%s\n\n", anagrama);
-    
+    printf("\n");
 
-  /*Resposta*/
-    
+  //Resposta
     scanf("%s", resposta);
 
-
-  /*Tranformando em letra maiúscula*/
-    
+  //Tranformando em Letra Maiúscula
     tam_resposta = strlen(resposta);
     for(i = 0; i < tam_resposta; i++){
       resposta[i] = toupper(resposta[i]);
     }
 
-
-  /*Randomizar a palavra*/
-    
+  //Randomizar a Palavra
     if(strcmp(resposta,"RANDOM") == 0){
-      printf ("\nNova palavra:\n\n");
+      printf ("\n\nAs novas letras são: ");
       continue;
     }
 
-  /*Condição de parada*/
-    
+  //Condição de Parada
     if(strcmp(resposta,"FIM") == 0){
       break;
     }
-  
-  /*Comparando tamanho e com palavras da lista*/
-    
-    tam_anagrama = strlen(palavra);
-    if(tam_resposta != tam_anagrama){
-      printf("Não é um anagrama!\n\n");
-      continue;
+
+  //Voltar ao Menu
+    if(strcmp(resposta,"0") == 0){
+      fclose(lista);
+      system("cls");
+      goto menu;
     }
-    
+
+  //Comparando Tamanho e com Palavras da Lista
+    tam_anagrama = strlen(palavra);
+
+    if(tam_resposta != tam_anagrama){
+      printf("Não é um anagrama!\n\n\nTente novamente: ");
+      goto start;
+    }
+
     rewind(lista);
-    while(fgets(palavraslista, sizeof(palavraslista), lista)){  
+    while(fgets(palavraslista, sizeof(palavraslista), lista)){
       comparar = strstr(palavraslista, resposta);
       if (comparar){
         break;
@@ -169,16 +199,20 @@ int main(){
     }
     if (comparar){
       score = score + 10;
-      printf("É anagrama!\n\n");
+      printf("É um anagrama!\n\n\n");
+      printf ("\nAs letras são: ");
       continue;
       }
       else{
-        printf("Não é anagrama!\n\n");
-        continue;
-      }  
-    }      
-    
-    fclose(lista);  
-    printf("\nSCORE: %d\nObrigado por jogar! Até mais!\n", score);
+        printf("Não é um anagrama!\n\n\nTente novamente: ");
+        goto start;
+      }
+    }
+    system("cls");
+    printf("\n\n\n\n\n\t\t\t\t  SCORE: %d\n\n\n", score);
+    printf("\n\n\t\t\t Obrigada por jogar! Até mais!\n\n\n\n\n\n\n\n\n\n\n");
+    fclose(lista);
   return 0;
 }
+
+

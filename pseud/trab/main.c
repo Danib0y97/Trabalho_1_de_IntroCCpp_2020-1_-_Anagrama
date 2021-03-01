@@ -16,7 +16,7 @@
 #include <time.h>
 
 
-#define TAM_LISTA 57
+#define TAM_LISTA 58
 
 
 int main(){
@@ -39,7 +39,7 @@ int main(){
   memset(anagrama, 0, sizeof(anagrama));
 
 
-  
+
   menu:
   printf(" //////////////////////////// Seja Bem-Vindo(a)! /////////////////////////////\n\n\n");
 
@@ -53,8 +53,8 @@ int main(){
 
    printf("\n\nCreated by: Julia Deroci & Daniel Ferreira.\n\n");
 
+  
   do{
-
 
     printf("\n\n\n\t1.Iniciar\n\t2.Como jogar?\n\t3.Sair\n\n\n");
     printf("\t");
@@ -98,7 +98,7 @@ int main(){
     break;
   } while(1);
 
-//Abrindo o Arquivo e Lendo as Palavras
+  //Abrindo o Arquivo e Lendo as Palavras
   lista = fopen("palavras.txt", "r");
   if(lista == NULL){
     printf("\n\n\n\n\tO arquivo não pode ser aberto.\n\n\n\n\n");
@@ -113,7 +113,7 @@ int main(){
 
   while(1){
 
-  //Sorteando Palavras da Lista
+    //Sorteando Palavras da Lista
     rewind(lista);
     srand(time(NULL));
     sorteio = rand() % (npalavras + 1);
@@ -122,11 +122,11 @@ int main(){
       fscanf(lista, "%s", palavra);
     }
 
-  //Zerando a String
+    //Zerando a String
     memset(anagrama, 0, sizeof(anagrama));
 
     start:
-  //Embaralhando a Palavra
+    //Embaralhando a Palavra
     for(i = 0; i < strlen(palavra); i++){
 
       x = rand() % strlen(palavra);
@@ -155,41 +155,48 @@ int main(){
     printf("%s\n\n", anagrama);
     printf("\n");
 
-  //Resposta
+    //Resposta
     scanf("%s", resposta);
 
-  //Tranformando em Letra Maiúscula
+    //Tranformando em Letra Maiúscula
     tam_resposta = strlen(resposta);
     for(i = 0; i < tam_resposta; i++){
       resposta[i] = toupper(resposta[i]);
     }
 
-  //Randomizar a Palavra
+    //Randomizar a Palavra
     if(strcmp(resposta,"RANDOM") == 0){
       printf ("\n\nAs novas letras são: ");
       continue;
     }
 
-  //Condição de Parada
+    //Condição de Parada
     if(strcmp(resposta,"FIM") == 0){
       break;
     }
 
-  //Voltar ao Menu
+    //Voltar ao Menu
     if(strcmp(resposta,"0") == 0){
       fclose(lista);
       system("cls");
       goto menu;
     }
 
-  //Comparando Tamanho e com Palavras da Lista
-    tam_anagrama = strlen(palavra);
+    //Comparando Tamanho
+    tam_anagrama = strlen(anagrama);
 
     if(tam_resposta != tam_anagrama){
       printf("Não é um anagrama!\n\n\nTente novamente: ");
       goto start;
     }
 
+    //Comparando Char
+	if (strspn(anagrama, resposta) != strlen(anagrama)) {
+		printf("Não é um anagrama!\n\n\nTente novamente: ");
+		goto start;
+	}
+
+    //Comparando com Palavras da Lista
     rewind(lista);
     while(fgets(palavraslista, sizeof(palavraslista), lista)){
       comparar = strstr(palavraslista, resposta);
@@ -210,9 +217,7 @@ int main(){
     }
     system("cls");
     printf("\n\n\n\n\n\t\t\t\t  SCORE: %d\n\n\n", score);
-    printf("\n\n\t\t\t Obrigada por jogar! Até mais!\n\n\n\n\n\n\n\n\n\n\n");
+    printf("\n\n\t\t\t Obrigado por jogar! Até mais!\n\n\n\n\n\n\n\n\n\n\n");
     fclose(lista);
   return 0;
 }
-
-
